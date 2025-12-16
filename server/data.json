@@ -1,0 +1,33 @@
+{
+  "households": [
+    {
+      "id": 1,
+      "head": "Margie Robbens",
+      "envelope": "ENV001"
+    },
+    {
+      "id": 2,
+      "head": "Mabel McGonahey",
+      "envelope": "ENV002"
+    }
+  ],
+  "pledges": [
+    {
+      "id": 1,
+      "householdId": 1,
+      "original": 25000,
+      "remaining": 25000,
+      "start": "2025-01-01"
+    }
+  ],
+  "contributions": [],
+  "ceremonies": [],
+  "loose": [],
+  "verifications": [
+    {
+      "email": "1234@gmail.com",
+      "code": "375430",
+      "expires": 1764371121105
+    }
+  ]
+}
