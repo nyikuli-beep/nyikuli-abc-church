@@ -12,8 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- Vanilla Calendar for ceremony calendar view -->
   <link href="https://cdn.jsdelivr.net/npm/vanilla-calendar-js@1.1.3/build/vanilla-calendar.min.css" rel="stylesheet">
-  <!-- Google Identity Services for social login -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-js@1.1.3/build/vanilla-calendar.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
@@ -37,6 +35,27 @@
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .card-hover { transition: transform .25s, box-shadow .25s; }
     .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+  </style>
+  <style>
+    /* Input focus and animation styles */
+    .form-input {
+      transition: border-color .3s ease, box-shadow .3s ease;
+    }
+    .form-input:focus {
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    /* Staggered animation for sign-up form */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .animate-shake { animation: shake 0.4s ease-in-out; }
   </style>
   <style>
     /* Style for highlighted search text */
@@ -160,6 +179,24 @@
       background-color: #0f172a; /* bg-slate-900 */
     }
   </style>
+  <style>
+    /* 3D Flip Animation Styles */
+    .flip-container-wrapper {
+      perspective: 1200px; /* Adds depth for the 3D effect */
+    }
+    .flip-container {
+      position: relative;
+      width: 100%;
+      height: 420px; /* Adjust height to fit form content */
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    .flip-container.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-panel { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .flip-back { transform: rotateY(180deg); }
+  </style>
 </head>
 <body class="antialiased bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-white min-h-screen">
   <!-- Container -->
@@ -183,7 +220,7 @@
             </div>
 
             <!-- right: forms -->
-            <div class="p-6 relative">
+            <div class="p-6 relative flip-container-wrapper">
               <div class="flex items-center justify-center mb-4">
                 <div id="authTabs" class="bg-slate-800/30 rounded-full p-1 flex items-center">
                   <button id="tabSignIn" class="px-4 py-2 rounded-full text-sm font-semibold bg-transparent">Sign In</button>
@@ -191,50 +228,44 @@
                 </div>
               </div>
 
-              <div id="authForms" class="w-full overflow-hidden">
-                <div class="forms-inner flex w-[200%] transition-transform duration-500 ease-in-out" style="transform:translateX(0%);">
+              <div id="flipContainer" class="flip-container">
                   <!-- Sign In panel -->
-                  <form id="signInForm" class="w-1/2 p-4 space-y-3" onsubmit="return false">
+                  <form id="signInForm" class="flip-panel p-4 space-y-3" onsubmit="return false">
                     <input id="email" type="email" placeholder="Email address" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
                     <input id="password" type="password" placeholder="Password" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
                     <div class="flex items-center justify-between text-sm text-gray-400">
                       <label class="flex items-center gap-2"><input id="remember" type="checkbox" class="w-4 h-4" /> Remember me</label>
-                      <a href="#" class="text-emerald-300">Forgot?</a>
+                      <a href="#" id="forgotPasswordLink" class="text-emerald-300">Forgot?</a>
                     </div>
                     <button id="authSubmit" class="card-hover w-full py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 font-semibold text-slate-900 flex items-center justify-center disabled:opacity-70">
                       <span class="spinner hidden h-5 w-5 mr-2 border-2 border-t-transparent rounded-full"></span>
                       <span class="button-text">Sign In</span>
                     </button>
-                    <!-- Social Login Divider -->
-                    <div class="relative flex py-2 items-center">
-                      <div class="flex-grow border-t border-slate-700"></div>
-                      <span class="flex-shrink mx-4 text-xs text-slate-400">OR</span>
-                      <div class="flex-grow border-t border-slate-700"></div>
-                    </div>
-                    <!-- Google Sign-In Button Container -->
-                    <div id="googleSignInWrapperSignIn" class="flex justify-center"></div>
                   </form>
 
                   <!-- Sign Up panel -->
-                  <form id="signUpForm" class="w-1/2 p-4 space-y-3" onsubmit="return false">
-                    <input id="fullName" type="text" placeholder="Full name" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
-                                  <div class="flex gap-2">
-                                    <input id="signupEmail" type="email" placeholder="Email address" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
-                                    <button id="sendCodeBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send code</button>
+                  <form id="signUpForm" class="flip-panel flip-back p-4 space-y-3" onsubmit="return false">
+                    <input id="fullName" type="text" placeholder="Full name" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.1s both;" />
+                                  <div class="flex gap-2" style="animation: fadeInUp 0.5s ease-out 0.2s both;">
+                                    <input id="signupEmail" type="email" placeholder="Email address" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <button id="sendCodeBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send code</button>
                                   </div>
 
-                                  <div class="flex gap-2">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
-                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send OTP</button>
+                                  <div class="flex gap-2" style="animation: fadeInUp 0.5s ease-out 0.3s both;">
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send OTP</button>
                                   </div>
-                    <input id="signupPassword" type="password" placeholder="Password" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
-                    <div id="extraSignup" class="space-y-2">
-                      <input id="confirmPassword" type="password" placeholder="Confirm password" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                    <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
+                    <div id="strengthContainer" class="h-1 w-full bg-slate-800 rounded-full overflow-hidden opacity-0 transition-opacity duration-300" style="animation: fadeInUp 0.5s ease-out 0.45s both;">
+                      <div id="strengthBar" class="h-full w-0 transition-all duration-500 ease-out bg-red-500"></div>
+                    </div>
+                    <div id="extraSignup" class="space-y-2" style="animation: fadeInUp 0.5s ease-out 0.5s both;">
+                      <input id="confirmPassword" type="password" placeholder="Confirm password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
                       <label class="flex items-center space-x-2"><input id="captcha" type="checkbox" class="w-4 h-4" /> <span class="text-sm text-gray-300">I'm not a robot (CAPTCHA)</span></label>
                     </div>
 
                     <!-- verification UI (hidden until code sent) -->
-                    <div id="verifyRow" class="hidden space-y-2">
+                    <div id="verifyRow" class="hidden space-y-2" style="animation: fadeInUp 0.5s ease-out 0.6s both;">
                       <div class="text-sm text-gray-400">A verification code will be sent to your email (simulated locally).</div>
                       <div class="flex gap-2">
                         <input id="signupCode" type="text" placeholder="Enter verification code" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
@@ -244,7 +275,7 @@
                     </div>
 
                     <!-- phone OTP verification (hidden until OTP sent) -->
-                    <div id="verifyPhoneRow" class="hidden space-y-2">
+                    <div id="verifyPhoneRow" class="hidden space-y-2" style="animation: fadeInUp 0.5s ease-out 0.6s both;">
                       <div class="text-sm text-gray-400">An OTP will be sent to your phone (simulated locally).</div>
                       <div class="flex gap-2">
                         <input id="signupPhoneCode" type="text" placeholder="Enter OTP" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
@@ -253,17 +284,8 @@
                       <div id="verifyPhoneMsg" class="text-xs text-gray-400"></div>
                     </div>
 
-                    <button id="authCreate" class="card-hover w-full py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 font-semibold text-slate-900">Create Account</button>
-                    <!-- Social Login Divider -->
-                    <div class="relative flex py-2 items-center">
-                      <div class="flex-grow border-t border-slate-700"></div>
-                      <span class="flex-shrink mx-4 text-xs text-slate-400">OR</span>
-                      <div class="flex-grow border-t border-slate-700"></div>
-                    </div>
-                    <!-- Google Sign-In Button Container -->
-                    <div id="googleSignInWrapperSignUp" class="flex justify-center"></div>
+                    <button id="authCreate" class="card-hover w-full py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 font-semibold text-slate-900 active:scale-95 transition-transform" style="animation: fadeInUp 0.5s ease-out 0.7s both;">Create Account</button>
                   </form>
-                </div>
               </div>
 
               <div class="text-xs text-center text-gray-400 mt-3">By continuing you agree to our <a href="#" class="text-emerald-300">Terms</a>.</div>
@@ -326,7 +348,6 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 01-2 2H8l-5 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="currentColor"/></svg>
             </span><span class="label">Chat Room</span></button>
             <button class="nav-button text-left hover:bg-slate-800/40" data-page="reports"><span class="icon" aria-hidden="true">
-        
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 3h10v4H7zM5 7h14v13a1 1 0 01-1 1H6a1 1 0 01-1-1V7z" fill="currentColor"/></svg>
             </span><span class="label">Reports</span></button>
             <button class="nav-button text-left hover:bg-slate-800/40" data-page="attendance"><span class="icon" aria-hidden="true">
@@ -1417,6 +1438,19 @@
         <button id="openBot" class="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-full shadow-lg">💬</button>
       </div>
 
+      <!-- Forgot Password Modal -->
+      <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass rounded-2xl p-6 w-full max-w-md">
+          <h3 class="text-xl font-bold mb-4">Reset Password</h3>
+          <p class="text-sm text-gray-300 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+          <input id="forgotEmail" type="email" placeholder="Email address" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none mb-4" />
+          <div class="flex justify-end gap-2">
+            <button id="closeForgotModal" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">Cancel</button>
+            <button id="sendResetLink" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 text-slate-900 font-semibold">Send Link</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Footer -->
       <footer class="mt-12 py-6 text-center text-sm text-gray-400">
         <div class="container mx-auto">© 2025 ABC Church Information System. Built by Nyikuli.</div>
@@ -1437,7 +1471,7 @@
 
     const tabSignIn = document.getElementById('tabSignIn');
     const tabSignUp = document.getElementById('tabSignUp');
-    const formsInner = document.querySelector('.forms-inner');
+    const flipContainer = document.getElementById('flipContainer');
     let isSignUp = false;
 
     // Check for existing session on page load
@@ -1463,11 +1497,11 @@
 
     function updateAuthUI(){
       if (isSignUp){
-        formsInner.style.transform = 'translateX(-50%)';
+        flipContainer.classList.add('is-flipped');
         tabSignUp.classList.add('bg-slate-700','rounded-full');
         tabSignIn.classList.remove('bg-slate-700','rounded-full');
       } else {
-        formsInner.style.transform = 'translateX(0%)';
+        flipContainer.classList.remove('is-flipped');
         tabSignIn.classList.add('bg-slate-700','rounded-full');
         tabSignUp.classList.remove('bg-slate-700','rounded-full');
       }
@@ -1570,6 +1604,32 @@
       if (verifyPhoneBtn) verifyPhoneBtn.addEventListener('click', verifyPhoneOTP);
     })();
 
+    // Password Strength Meter Logic
+    (function setupPasswordStrength(){
+        const passInput = document.getElementById('signupPassword');
+        const container = document.getElementById('strengthContainer');
+        const bar = document.getElementById('strengthBar');
+        if(passInput && container && bar){
+            passInput.addEventListener('input', ()=>{
+                const val = passInput.value;
+                if(!val) { container.classList.add('opacity-0'); bar.style.width='0%'; return; }
+                container.classList.remove('opacity-0');
+                let score = 0;
+                if(val.length > 5) score++;
+                if(val.length > 8) score++;
+                if(/[A-Z]/.test(val)) score++;
+                if(/[0-9]/.test(val)) score++;
+                if(/[^A-Za-z0-9]/.test(val)) score++;
+                
+                const pct = Math.min(100, (score/5)*100);
+                bar.style.width = pct + '%';
+                if(score <= 2) bar.className = 'h-full transition-all duration-500 ease-out bg-red-500';
+                else if(score <= 3) bar.className = 'h-full transition-all duration-500 ease-out bg-yellow-500';
+                else bar.className = 'h-full transition-all duration-500 ease-out bg-emerald-500';
+            });
+        }
+    })();
+
     // handle Sign Up submit — require successful email and phone verification first
     authCreate.addEventListener('click', () => {
       const name = document.getElementById('fullName').value.trim();
@@ -1577,9 +1637,13 @@
       const phone = (document.getElementById('signupPhone') && document.getElementById('signupPhone').value.trim()) || '';
       const password = document.getElementById('signupPassword').value;
       const confirm = document.getElementById('confirmPassword').value;
-      if (!name || !email || !password) { alert('Enter name, email and password'); return; }
-      if (password !== confirm) { alert('Passwords do not match'); return; }
-      if (!captcha.checked) { alert('Please check the CAPTCHA box'); return; }
+      
+      const form = document.getElementById('signUpForm');
+      function shake(){ form.classList.add('animate-shake'); setTimeout(()=>form.classList.remove('animate-shake'), 400); }
+
+      if (!name || !email || !password) { alert('Enter name, email and password'); shake(); return; }
+      if (password !== confirm) { alert('Passwords do not match'); shake(); return; }
+      if (!captcha.checked) { alert('Please check the CAPTCHA box'); shake(); return; }
 
       // ensure email verified via code
       const verified = localStorage.getItem('abc_verified:' + email) === '1';
@@ -1645,6 +1709,34 @@
         alert('Sign in failed. Please check your email and password.');
       }
     });
+
+    // ----------------------
+    // Forgot Password Modal Logic
+    // ----------------------
+    (function setupForgotPassword() {
+        const forgotLink = document.getElementById('forgotPasswordLink');
+        const forgotModal = document.getElementById('forgotPasswordModal');
+        const closeForgotBtn = document.getElementById('closeForgotModal');
+        const sendResetBtn = document.getElementById('sendResetLink');
+        const forgotEmailInput = document.getElementById('forgotEmail');
+
+        if (forgotLink && forgotModal) {
+            forgotLink.addEventListener('click', (e) => { e.preventDefault(); forgotModal.classList.remove('hidden'); });
+            
+            const closeForgot = () => { forgotModal.classList.add('hidden'); forgotEmailInput.value = ''; };
+            if (closeForgotBtn) closeForgotBtn.addEventListener('click', closeForgot);
+            if (forgotModal) forgotModal.addEventListener('click', (e) => { if (e.target === forgotModal) closeForgot(); });
+
+            if (sendResetBtn) {
+                sendResetBtn.addEventListener('click', () => {
+                    const email = forgotEmailInput.value.trim();
+                    if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+                    alert(`Password reset link sent to ${email} (simulated).`);
+                    closeForgot();
+                });
+            }
+        }
+    })();
 
     // ----------------------
     // Sidebar page switching
@@ -2204,55 +2296,6 @@ ${recentSummary}`;
       }
     });
 
-    // --- Google Sign-In Initialization ---
-    async function handleGoogleSignIn(response) {
-      const credential = response.credential;
-      const API_BASE = localStorage.getItem('abc_api_base') || 'http://localhost:3000';
-
-      try {
-        // Send the credential to your backend for verification
-        const res = await fetch(`${API_BASE}/api/auth/google-signin`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ credential }),
-        });
-
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || 'Backend verification failed.');
-        }
-
-        const { token, user } = await res.json();
-
-        // Store the session token from your backend
-        localStorage.setItem('abc_session_token', token);
-
-        // Successful login: hide auth page and show dashboard
-        authPage.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-
-        // Personalize the dashboard with user info from your server
-        document.querySelector('#dashboard .px-3.py-1.rounded-md').textContent = user.name;
-        console.log("Backend verification successful for:", user.name);
-      } catch (e) {
-        console.error("Error during Google Sign-In verification:", e);
-        alert(`Sign-in failed: ${e.message}`);
-      }
-    }
-
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: 'PASTE_YOUR_CLIENT_ID_HERE.apps.googleusercontent.com', // IMPORTANT: Replace with your actual Client ID in BOTH frontend and backend
-        callback: handleGoogleSignIn
-      });
-      // Render the button in both sign-in and sign-up forms
-      google.accounts.id.renderButton(document.getElementById('googleSignInWrapperSignIn'), { theme: 'outline', size: 'large', width: '300' });
-      google.accounts.id.renderButton(document.getElementById('googleSignInWrapperSignUp'), { theme: 'outline', size: 'large', width: '300' });
-      google.accounts.id.prompt(); // Also display the One Tap dialog
-    };
-
     const toggleSidebar = document.getElementById('toggleSidebar');
     toggleSidebar.addEventListener('click', () => {
       document.getElementById('sidebar').classList.toggle('translate-x-0');
@@ -2286,6 +2329,10 @@ ${recentSummary}`;
           // clear some fields
           document.getElementById('email').value = '';
           document.getElementById('password').value = '';
+
+          // Reset sign-in button state
+          authSubmit.disabled = false;
+          authSubmit.querySelector('.spinner').classList.add('hidden');
         }
       });
     }
