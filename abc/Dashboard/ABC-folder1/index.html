@@ -12,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- Vanilla Calendar for ceremony calendar view -->
   <link href="https://cdn.jsdelivr.net/npm/vanilla-calendar-js@1.1.3/build/vanilla-calendar.min.css" rel="stylesheet">
+  <!-- Google Identity Services for social login -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-js@1.1.3/build/vanilla-calendar.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
@@ -203,6 +205,14 @@
                       <span class="spinner hidden h-5 w-5 mr-2 border-2 border-t-transparent rounded-full"></span>
                       <span class="button-text">Sign In</span>
                     </button>
+                    <!-- Social Login Divider -->
+                    <div class="relative flex py-2 items-center">
+                      <div class="flex-grow border-t border-slate-700"></div>
+                      <span class="flex-shrink mx-4 text-xs text-slate-400">OR</span>
+                      <div class="flex-grow border-t border-slate-700"></div>
+                    </div>
+                    <!-- Google Sign-In Button Container -->
+                    <div id="googleSignInWrapperSignIn" class="flex justify-center"></div>
                   </form>
 
                   <!-- Sign Up panel -->
@@ -244,6 +254,14 @@
                     </div>
 
                     <button id="authCreate" class="card-hover w-full py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 font-semibold text-slate-900">Create Account</button>
+                    <!-- Social Login Divider -->
+                    <div class="relative flex py-2 items-center">
+                      <div class="flex-grow border-t border-slate-700"></div>
+                      <span class="flex-shrink mx-4 text-xs text-slate-400">OR</span>
+                      <div class="flex-grow border-t border-slate-700"></div>
+                    </div>
+                    <!-- Google Sign-In Button Container -->
+                    <div id="googleSignInWrapperSignUp" class="flex justify-center"></div>
                   </form>
                 </div>
               </div>
@@ -308,6 +326,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 01-2 2H8l-5 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="currentColor"/></svg>
             </span><span class="label">Chat Room</span></button>
             <button class="nav-button text-left hover:bg-slate-800/40" data-page="reports"><span class="icon" aria-hidden="true">
+        
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 3h10v4H7zM5 7h14v13a1 1 0 01-1 1H6a1 1 0 01-1-1V7z" fill="currentColor"/></svg>
             </span><span class="label">Reports</span></button>
             <button class="nav-button text-left hover:bg-slate-800/40" data-page="attendance"><span class="icon" aria-hidden="true">
@@ -2184,6 +2203,55 @@ ${recentSummary}`;
         document.body.style.backgroundColor = '';
       }
     });
+
+    // --- Google Sign-In Initialization ---
+    async function handleGoogleSignIn(response) {
+      const credential = response.credential;
+      const API_BASE = localStorage.getItem('abc_api_base') || 'http://localhost:3000';
+
+      try {
+        // Send the credential to your backend for verification
+        const res = await fetch(`${API_BASE}/api/auth/google-signin`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ credential }),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || 'Backend verification failed.');
+        }
+
+        const { token, user } = await res.json();
+
+        // Store the session token from your backend
+        localStorage.setItem('abc_session_token', token);
+
+        // Successful login: hide auth page and show dashboard
+        authPage.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+
+        // Personalize the dashboard with user info from your server
+        document.querySelector('#dashboard .px-3.py-1.rounded-md').textContent = user.name;
+        console.log("Backend verification successful for:", user.name);
+      } catch (e) {
+        console.error("Error during Google Sign-In verification:", e);
+        alert(`Sign-in failed: ${e.message}`);
+      }
+    }
+
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: 'PASTE_YOUR_CLIENT_ID_HERE.apps.googleusercontent.com', // IMPORTANT: Replace with your actual Client ID in BOTH frontend and backend
+        callback: handleGoogleSignIn
+      });
+      // Render the button in both sign-in and sign-up forms
+      google.accounts.id.renderButton(document.getElementById('googleSignInWrapperSignIn'), { theme: 'outline', size: 'large', width: '300' });
+      google.accounts.id.renderButton(document.getElementById('googleSignInWrapperSignUp'), { theme: 'outline', size: 'large', width: '300' });
+      google.accounts.id.prompt(); // Also display the One Tap dialog
+    };
 
     const toggleSidebar = document.getElementById('toggleSidebar');
     toggleSidebar.addEventListener('click', () => {
