@@ -187,14 +187,14 @@
     .flip-container {
       position: relative;
       width: 100%;
-      height: 420px; /* Adjust height to fit form content */
-      transition: transform 2s;
+      transition: transform 1s;
       transform-style: preserve-3d;
+      display: grid; /* Use grid to allow container to auto-size */
     }
     .flip-container.is-flipped {
-      transform: rotateY(150deg);
+      transform: rotateY(180deg);
     }
-    .flip-panel { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .flip-panel { width: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; grid-area: 1 / 1; }
     .flip-back { transform: rotateY(180deg); }
   </style>
 </head>
