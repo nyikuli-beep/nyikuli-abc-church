@@ -259,7 +259,7 @@
                                   </div>
 
                                   <div class="flex gap-2">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" maxlength="16" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" maxlength="13" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
                                     <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send OTP</button>
                                   </div>
                     <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
@@ -2771,13 +2771,24 @@ ${recentSummary}`;
         el.removeAttribute('maxlength'); 
         el.addEventListener('input', (e) => {
           let raw = e.target.value.replace(/[^0-9+]/g, '');
+          
+          // Enforce limits based on format prefix
+          if (raw.startsWith('+254')) raw = raw.substring(0, 13);
+          else if (raw.startsWith('0')) raw = raw.substring(0, 10);
+          else raw = raw.substring(0, 13); // Fallback limit
+
           let formatted = raw;
           if (raw.startsWith('0')) { // 07XX XXX XXX
-             let p1 = raw.slice(0,4), p2 = raw.slice(4,7), p3 = raw.slice(7,10);
+             const p1 = raw.substring(0,4);
+             const p2 = raw.substring(4,7);
+             const p3 = raw.substring(7,10);
              formatted = p1 + (p2 ? ' ' + p2 : '') + (p3 ? ' ' + p3 : '');
           } else if (raw.startsWith('254') || raw.startsWith('+254')) { // +254 7XX XXX XXX
              if (!raw.startsWith('+')) raw = '+' + raw;
-             let p1 = raw.slice(0,4), p2 = raw.slice(4,7), p3 = raw.slice(7,10), p4 = raw.slice(10,13);
+             const p1 = raw.substring(0,4);
+             const p2 = raw.substring(4,7);
+             const p3 = raw.substring(7,10);
+             const p4 = raw.substring(10,13);
              formatted = p1 + (p2 ? ' ' + p2 : '') + (p3 ? ' ' + p3 : '') + (p4 ? ' ' + p4 : '');
           }
           e.target.value = formatted;
