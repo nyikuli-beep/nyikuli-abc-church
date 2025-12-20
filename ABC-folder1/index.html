@@ -179,125 +179,6 @@
       background-color: #0f172a; /* bg-slate-900 */
     }
   </style>
-  <style>
-    /* 3D Flip Animation Styles */
-    .flip-container-wrapper {
-      perspective: 1200px; /* Adds depth for the 3D effect */
-    }
-    .flip-container {
-      position: relative;
-      width: 100%;
-      transition: transform 1s;
-      transform-style: preserve-3d;
-      display: grid; /* Use grid to allow container to auto-size */
-    }
-    .flip-container.is-flipped {
-      transform: rotateY(180deg);
-    }
-    .flip-panel { width: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; grid-area: 1 / 1; }
-    .flip-back { transform: rotateY(180deg); }
-  </style>
-  <style>
-    /* Light Mode Overrides */
-    body.bg-white {
-      background-color: #f8fafc !important; /* slate-50 */
-      color: #0f172a !important; /* slate-900 */
-    }
-    
-    /* Override glass effect for light mode */
-    body.bg-white .glass {
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid #e2e8f0; /* slate-200 */
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Sidebar adjustments */
-    body.bg-white #sidebar {
-      background-color: #ffffff;
-      border-right-color: #e2e8f0;
-    }
-    body.bg-white #sidebar .nav-button:hover {
-      background-color: #f1f5f9; /* slate-100 */
-    }
-    body.bg-white #sidebar .nav-button .label {
-      color: #334155; /* slate-700 */
-    }
-    body.bg-white #sidebar .nav-button .icon {
-        background: #f1f5f9;
-        color: #334155;
-    }
-
-    /* Header */
-    body.bg-white header {
-        background-color: rgba(255, 255, 255, 0.8) !important;
-        border-bottom-color: #e2e8f0 !important;
-    }
-    body.bg-white header .text-sm {
-        color: #334155 !important;
-    }
-
-    /* Text color overrides for light mode */
-    body.bg-white .text-white { color: #0f172a !important; }
-    body.bg-white .text-gray-300, 
-    body.bg-white .text-gray-400, 
-    body.bg-white .text-slate-300, 
-    body.bg-white .text-slate-400 { 
-        color: #475569 !important; /* slate-600 */ 
-    }
-    
-    /* Accent colors - darken them for light background */
-    body.bg-white .text-purple-300 { color: #7c3aed !important; }
-    body.bg-white .text-purple-200 { color: #6d28d9 !important; }
-    body.bg-white .text-emerald-400 { color: #059669 !important; }
-    body.bg-white .text-blue-400 { color: #2563eb !important; }
-    body.bg-white .text-yellow-400 { color: #d97706 !important; }
-    body.bg-white .text-red-400 { color: #dc2626 !important; }
-    body.bg-white .text-green-400 { color: #16a34a !important; }
-
-    /* Inputs and form elements */
-    body.bg-white input, 
-    body.bg-white select, 
-    body.bg-white textarea {
-        background-color: #ffffff !important;
-        border-color: #cbd5e1 !important; /* slate-300 */
-        color: #0f172a !important;
-    }
-    body.bg-white input::placeholder,
-    body.bg-white textarea::placeholder {
-        color: #94a3b8 !important;
-    }
-
-    /* Cards and containers with dark backgrounds */
-    body.bg-white .bg-slate-900\/30,
-    body.bg-white .bg-slate-900\/40,
-    body.bg-white .bg-slate-900\/50,
-    body.bg-white .bg-slate-800,
-    body.bg-white .bg-slate-800\/50,
-    body.bg-white .bg-slate-700 {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0;
-        color: #0f172a !important;
-    }
-    
-    /* Specific fix for summary cards to stand out */
-    body.bg-white .summary-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    }
-
-    /* Table borders */
-    body.bg-white .border-slate-700,
-    body.bg-white .border-slate-800 {
-        border-color: #e2e8f0 !important;
-    }
-    
-    /* Chat bubbles */
-    body.bg-white .bg-slate-700 {
-        background-color: #f1f5f9 !important; /* slate-100 */
-        color: #0f172a !important;
-    }
-  </style>
 </head>
 <body class="antialiased bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-white min-h-screen">
   <!-- Container -->
@@ -352,9 +233,9 @@
                                     <button id="sendCodeBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send code</button>
                                   </div>
 
-                                  <div class="flex gap-2" style="animation: fadeInUp 0.5s ease-out 0.3s both;">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" maxlength="13" />
-                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send OTP</button>
+                                  <div class="flex gap-2">
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send OTP</button>
                                   </div>
                     <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
                     <div id="strengthContainer" class="h-1 w-full bg-slate-800 rounded-full overflow-hidden opacity-0 transition-opacity duration-300" style="animation: fadeInUp 0.5s ease-out 0.45s both;">
@@ -1130,7 +1011,7 @@
                   <div class="flex flex-col sm:flex-row gap-2 mb-3">
                     <input id="looseAmount" type="number" step="0.01" placeholder="Amount" class="flex-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700" />
                     <input id="looseDate" type="date" class="px-3 py-2 rounded-lg bg-slate-800 border border-slate-700" />
-                    <button id="looseAdd" class="px-3 py-2 rounded-lg bg-slate-800/60">Add</button>
+                    <button id="looseAdd" class="px-3 py-2 rounded-lg bg-purple-800/60">Add</button>
                   </div>
                   <div id="looseList" class="text-sm text-gray-300 max-h-28 overflow-y-auto pr-2">
                     <!-- Loose offerings list populated by JS -->
@@ -1617,6 +1498,19 @@
         <button id="openBot" class="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-full shadow-lg text-white hover:scale-110 transition-transform">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </div>
+
+      <!-- Forgot Password Modal -->
+      <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass rounded-2xl p-6 w-full max-w-md">
+          <h3 class="text-xl font-bold mb-4">Reset Password</h3>
+          <p class="text-sm text-gray-300 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+          <input id="forgotEmail" type="email" placeholder="Email address" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none mb-4" />
+          <div class="flex justify-end gap-2">
+            <button id="closeForgotModal" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">Cancel</button>
+            <button id="sendResetLink" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 text-slate-900 font-semibold">Send Link</button>
+          </div>
+        </div>
       </div>
 
       <!-- Forgot Password Modal -->
@@ -5409,4 +5303,3 @@ ${recentSummary}`;
 </html>
 </html>
            
-   
