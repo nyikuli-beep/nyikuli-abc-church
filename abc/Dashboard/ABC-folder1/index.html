@@ -2572,6 +2572,14 @@ ${recentSummary}`;
         });
     }
 
+    // Restrict sign-up phone input to numbers and plus sign
+    const signupPhoneInput = document.getElementById('signupPhone');
+    if (signupPhoneInput) {
+        signupPhoneInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9+]/g, '');
+        });
+    }
+
     // Remove family member from temp list
     familyMembersListEl.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-member-btn')) {

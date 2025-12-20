@@ -353,7 +353,7 @@
                                   </div>
 
                                   <div class="flex gap-2" style="animation: fadeInUp 0.5s ease-out 0.3s both;">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" maxlength="13" />
                                     <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send OTP</button>
                                   </div>
                     <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
@@ -4405,7 +4405,7 @@ ${recentSummary}`;
                 <div class="flex items-center gap-3">
                     <div class="font-bold text-sm w-4 text-center ${rankColor}">#${i+1}</div>
                     <div>
-                        <div class="font-semibold text-sm text-slate-200">${m.head}</div>
+                        <div class="font-semibold text-sm text-white">${m.head}</div>
                         <div class="text-[10px] text-gray-500">${m.contribCount} gifts</div>
                     </div>
                 </div>
