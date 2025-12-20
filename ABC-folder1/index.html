@@ -259,7 +259,7 @@
                                   </div>
 
                                   <div class="flex gap-2">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" maxlength="16" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
                                     <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send OTP</button>
                                   </div>
                     <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
@@ -2761,13 +2761,29 @@ ${recentSummary}`;
         houseSearchInput.addEventListener('input', () => renderHouseList(houseSearchInput.value));
     }
 
-    // Restrict household phone input to 10 digits
-    const housePhoneInput = document.getElementById('housePhone');
-    if (housePhoneInput) {
-        housePhoneInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '');
+    // Auto-Format Phone Numbers
+    (function setupPhoneFormatting() {
+      const inputs = ['signupPhone', 'housePhone', 'mpesaPhone'];
+      inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        // Remove maxlength to allow formatting spaces
+        el.removeAttribute('maxlength'); 
+        el.addEventListener('input', (e) => {
+          let raw = e.target.value.replace(/[^0-9+]/g, '');
+          let formatted = raw;
+          if (raw.startsWith('0')) { // 07XX XXX XXX
+             let p1 = raw.slice(0,4), p2 = raw.slice(4,7), p3 = raw.slice(7,10);
+             formatted = p1 + (p2 ? ' ' + p2 : '') + (p3 ? ' ' + p3 : '');
+          } else if (raw.startsWith('254') || raw.startsWith('+254')) { // +254 7XX XXX XXX
+             if (!raw.startsWith('+')) raw = '+' + raw;
+             let p1 = raw.slice(0,4), p2 = raw.slice(4,7), p3 = raw.slice(7,10), p4 = raw.slice(10,13);
+             formatted = p1 + (p2 ? ' ' + p2 : '') + (p3 ? ' ' + p3 : '') + (p4 ? ' ' + p4 : '');
+          }
+          e.target.value = formatted;
         });
-    }
+      });
+    })();
 
     // Remove family member from temp list
     familyMembersListEl.addEventListener('click', (e) => {
