@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 // Best Practice: Ensure all required environment variables are set before starting.
-const requiredEnv = ['MPESA_CONSUMER_KEY', 'MPESA_CONSUMER_SECRET', 'MPESA_PASSKEY', 'MPESA_SHORTCODE', 'MPESA_CALLBACK_URL', 'JWT_SECRET', 'GOOGLE_CLIENT_ID'];
+const requiredEnv = ['MPESA_CONSUMER_KEY', 'MPESA_CONSUMER_SECRET', 'MPESA_PASSKEY', 'MPESA_SHORTCODE', 'MPESA_CALLBACK_URL', 'JWT_SECRET', 'GOOGLE_CLIENT_ID', 'MPESA_CALLBACK_SECRET'];
 for (const v of requiredEnv) {
     if (!process.env[v]) {
         console.error(`\nFATAL ERROR: Environment variable ${v} is not set. Please check your .env file or hosting configuration.\n`);
@@ -28,7 +28,23 @@ const JWT_SECRET = process.env.JWT_SECRET || 'YOUR_SUPER_SECRET_KEY_FOR_JWT';
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // Middleware
-app.use(cors()); // Allows requests from your frontend
+// CORS: Only allow requests from specific domains
+const allowedOrigins = [
+    'https://your-custom-domain.com', // REPLACE THIS with your actual custom domain
+    'https://www.your-custom-domain.com',
+    'http://localhost:3000', // Allow local backend testing
+    'http://127.0.0.1:5500'  // Allow local frontend testing (VS Code Live Server)
+];
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, or M-Pesa callbacks) or if origin is in allowed list
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
 app.use(express.json()); // Parses incoming JSON requests
 
 // Request Logger: Prints every incoming request to the logs
@@ -134,7 +150,12 @@ app.post('/api/stkpush', getMpesaAccessToken, async (req, res) => {
     const { phone, amount, householdId } = req.body;
     const shortCode = process.env.MPESA_SHORTCODE || '174379';
     const passkey = process.env.MPESA_PASSKEY;
-    const callbackUrl = process.env.MPESA_CALLBACK_URL; // Must be HTTPS and publicly accessible (e.g., ngrok)
+    let callbackUrl = process.env.MPESA_CALLBACK_URL; // Must be HTTPS and publicly accessible (e.g., ngrok)
+    const callbackSecret = process.env.MPESA_CALLBACK_SECRET;
+
+    // Append secret token to callback URL for security
+    const separator = callbackUrl.includes('?') ? '&' : '?';
+    callbackUrl += `${separator}secret=${callbackSecret}`;
 
     const date = new Date();
     const timestamp = date.getFullYear() +
@@ -197,6 +218,14 @@ app.post('/api/stkpush', getMpesaAccessToken, async (req, res) => {
 // 2. Callback Route (Safaricom calls this)
 app.post('/api/callback', (req, res) => {
     console.log('--- M-Pesa Callback Received ---');
+    
+    // Security Check: Verify the secret token
+    const secret = req.query.secret;
+    if (!secret || secret !== process.env.MPESA_CALLBACK_SECRET) {
+        console.warn('Unauthorized callback attempt rejected.');
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+
     const body = req.body.Body.stkCallback;
     
     // Find transaction in DB
@@ -245,6 +274,13 @@ app.post('/api/query-status', async (req, res) => {
     } else {
         res.status(404).json({ error: 'Transaction not found' });
     }
+});
+
+// 4. Admin Endpoint: Get All Transactions
+app.get('/api/admin/mpesa-transactions', (req, res) => {
+    // Return transactions sorted by newest first
+    const sorted = [...mpesaTransactions].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    res.json(sorted);
 });
 
 app.listen(PORT, () => {
