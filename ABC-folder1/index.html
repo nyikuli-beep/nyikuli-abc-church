@@ -179,24 +179,6 @@
       background-color: #0f172a; /* bg-slate-900 */
     }
   </style>
-  <style>
-    /* 3D Flip Animation Styles */
-    .flip-container-wrapper {
-      perspective: 1200px; /* Adds depth for the 3D effect */
-    }
-    .flip-container {
-      position: relative;
-      width: 100%;
-      transition: transform 1s;
-      transform-style: preserve-3d;
-      display: grid; /* Use grid to allow container to auto-size */
-    }
-    .flip-container.is-flipped {
-      transform: rotateY(180deg);
-    }
-    .flip-panel { width: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; grid-area: 1 / 1; }
-    .flip-back { transform: rotateY(180deg); }
-  </style>
 </head>
 <body class="antialiased bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-white min-h-screen">
   <!-- Container -->
@@ -251,9 +233,9 @@
                                     <button id="sendCodeBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send code</button>
                                   </div>
 
-                                  <div class="flex gap-2" style="animation: fadeInUp 0.5s ease-out 0.3s both;">
-                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="form-input flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
-                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60 active:scale-95 transition-transform">Send OTP</button>
+                                  <div class="flex gap-2">
+                                    <input id="signupPhone" type="tel" placeholder="Phone number (+254...)" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" />
+                                    <button id="sendPhoneBtn" type="button" class="px-3 py-2 rounded-lg bg-slate-800/60">Send OTP</button>
                                   </div>
                     <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none" style="animation: fadeInUp 0.5s ease-out 0.4s both;" />
                     <div id="strengthContainer" class="h-1 w-full bg-slate-800 rounded-full overflow-hidden opacity-0 transition-opacity duration-300" style="animation: fadeInUp 0.5s ease-out 0.45s both;">
@@ -307,7 +289,9 @@
             </div>
           </div>
           <div class="flex items-center space-x-4">
-            <button id="toggleDark" class="p-2 rounded-md bg-slate-800/30">🌙</button>
+            <button id="toggleDark" class="p-2 rounded-md bg-slate-800/30 hover:bg-slate-700 text-gray-300 hover:text-white transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
             <div class="px-3 py-1 rounded-md bg-slate-800/20 text-sm">Margie Robbens</div>
             <button id="signOutBtn" class="px-3 py-1 rounded-md bg-red-600/90 text-sm hover:bg-red-500">Sign Out</button>
           </div>
@@ -356,6 +340,9 @@
             <button class="nav-button text-left hover:bg-slate-800/40" data-page="finances"><span class="icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.44 11.05l-9.19-9.19a6 6 0 00-8.49 8.49l9.19 9.19a4 4 0 005.66 0l2.83-2.83a4 4 0 000-5.66z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="14.5" y1="9.5" x2="9.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span><span class="label">Finances</span></button>
+            <button class="nav-button text-left hover:bg-slate-800/40" data-page="mpesa-admin"><span class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 15v-2h2v2h-2zm1.25-4.15l-.65.65c-.5.5-.6 1.5-.6 2.5h-2c0-1.5.5-2.5 1.5-3.5l1.1-1.1c.4-.4.4-1 .4-1.4 0-.8-.7-1.5-1.5-1.5S9 6.2 9 7H7c0-2.2 1.8-4 4-4s4 1.8 4 4c0 1.5-.5 2.5-1.5 3.5z" fill="currentColor"/></svg>
+            </span><span class="label">M-Pesa Admin</span></button>
           </nav>
         </aside>
 
@@ -410,7 +397,7 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 <div class="card-hover glass rounded-2xl p-6">
                   <h3 class="text-xl font-bold mb-4">Contribution Analytics</h3>
                   <canvas id="contribChart" height="220" style="max-height:300px;height:220px;width:100%;"></canvas>
@@ -422,6 +409,12 @@
                     <div id="upcomingCeremoniesList" class="space-y-3">
                         <!-- Ceremony items will be dynamically inserted here -->
                     </div>
+                </div>
+
+                <!-- Member Engagement Widget -->
+                <div class="card-hover glass rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-4">Engagement Score</h3>
+                    <div id="engagementList" class="space-y-2"></div>
                 </div>
             </div>
           </section>
@@ -952,11 +945,49 @@
             </div>
           </section>
 
+          <!-- M-Pesa Admin Page -->
+          <section id="page-mpesa-admin" class="hidden">
+            <div class="glass rounded-2xl p-6">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">M-Pesa Transactions</h2>
+                <button id="refreshMpesaAdmin" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                  Refresh
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto rounded-lg border border-slate-700">
+                <table class="w-full text-left text-sm text-gray-300">
+                  <thead class="bg-slate-800/80 text-gray-400 uppercase text-xs">
+                    <tr>
+                      <th class="px-4 py-3">Date</th>
+                      <th class="px-4 py-3">Phone</th>
+                      <th class="px-4 py-3">Amount</th>
+                      <th class="px-4 py-3">Receipt</th>
+                      <th class="px-4 py-3">Status</th>
+                      <th class="px-4 py-3">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mpesaAdminTableBody" class="divide-y divide-slate-800 bg-slate-900/30">
+                    <!-- Rows populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
           <!-- Placeholder for other pages -->
           <section id="page-contributions" class="hidden">
             <div class="glass rounded-2xl p-6">
               <h2 class="text-2xl font-bold mb-4">Contributions</h2>
-              <div class="grid md:grid-cols-2 gap-6">
+              
+              <!-- Payment Method Tabs -->
+              <div class="flex space-x-2 mb-6 bg-slate-900/40 p-1 rounded-xl w-fit">
+                <button id="tabContribManual" class="px-4 py-2 rounded-lg bg-slate-700 text-white font-semibold text-sm transition-all shadow-lg">Manual Entry</button>
+                <button id="tabContribMpesa" class="px-4 py-2 rounded-lg text-gray-400 hover:text-white font-semibold text-sm transition-all hover:bg-slate-800/50">M-Pesa (STK)</button>
+              </div>
+
+              <div id="viewContribManual" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="p-4 rounded-lg bg-slate-900/30">
                   <h3 class="font-semibold mb-2">Lookup Household</h3>
                   <div class="mb-3">
@@ -986,6 +1017,27 @@
                     <!-- Loose offerings list populated by JS -->
                   </div>
                   <div id="looseTotal" class="text-sm font-bold mt-2 pt-2 border-t border-slate-700"></div>
+                </div>
+              </div>
+
+              <!-- M-Pesa Payment Section (Tab View) -->
+              <div id="viewContribMpesa" class="hidden max-w-md mx-auto">
+                <div class="p-6 rounded-2xl bg-slate-900/30 border border-green-500/30 relative overflow-hidden">
+                  <div class="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V11c0-1.1-.9-2-2-2zm-5-5c1.7 0 3 1.3 3 3v2H9V7c0-1.7 1.3-3 3-3zm5 15H7V11h10v8z"/></svg>
+                  </div>
+                  <h3 class="font-semibold mb-2 text-green-400 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5a3 3 0 00-6 0M7 19a4 4 0 018 0"/></svg>
+                    M-Pesa (STK Push)
+                  </h3>
+                  <p class="text-xs text-gray-400 mb-3">Send contribution directly to <strong>0798245312</strong>.</p>
+                  <div class="space-y-2">
+                    <input id="mpesaPhone" type="tel" placeholder="Payer Phone (e.g., 07...)" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700" />
+                    <input id="mpesaAmount" type="number" placeholder="Amount (KES)" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700" />
+                    <select id="mpesaHousehold" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm"><option value="">Select Household (Optional)</option></select>
+                    <button id="btnMpesaPay" class="w-full py-2 rounded-lg bg-green-600 hover:bg-green-500 font-bold text-white shadow-lg shadow-green-900/20 transition-all active:scale-95">Pay with M-Pesa</button>
+                    <div id="mpesaStatus" class="text-xs text-center min-h-[1.5rem] flex items-center justify-center"></div>
+                  </div>
                 </div>
               </div>
 
@@ -1420,12 +1472,20 @@
         </main>
       </div>
 
+      <!-- Back to Top Button -->
+      <button id="backToTopBtn" title="Back to Top" class="hidden fixed bottom-24 right-6 md:bottom-6 md:right-20 z-50 p-3 rounded-full bg-purple-600/70 text-white shadow-lg hover:bg-purple-500 transition-all backdrop-blur-sm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
       <!-- Floating Chatbot -->
       <div id="chatbotContainer" class="fixed bottom-6 right-6 z-50">
-        <div id="botWindow" class="hidden mb-4 w-80 glass rounded-2xl overflow-hidden flex flex-col" style="height: 24rem;">
+        <div id="botWindow" class="hidden mb-4 w-80 glass rounded-2xl overflow-hidden flex flex-col transition-all duration-300" style="height: 24rem;">
           <div id="botHeader" class="bg-gradient-to-r from-purple-600 to-pink-600 p-3 flex justify-between items-center cursor-move">
             <strong class="text-white">nyikuli AI 😊</strong>
-            <button id="closeBot" class="text-white">✕</button>
+            <div class="flex items-center gap-3">
+              <button id="minimizeBot" class="text-white font-bold hover:text-gray-200" title="Minimize">_</button>
+              <button id="closeBot" class="text-white hover:text-gray-200">✕</button>
+            </div>
           </div>
           <div class="p-3 flex-1 overflow-y-auto">Hello! How can I assist you?</div>
            <div class="p-3 border-t border-slate-800 relative">
@@ -1435,7 +1495,22 @@
             </div>
           </div>
         </div>
-        <button id="openBot" class="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-full shadow-lg">💬</button>
+        <button id="openBot" class="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-full shadow-lg text-white hover:scale-110 transition-transform">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Forgot Password Modal -->
+      <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass rounded-2xl p-6 w-full max-w-md">
+          <h3 class="text-xl font-bold mb-4">Reset Password</h3>
+          <p class="text-sm text-gray-300 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+          <input id="forgotEmail" type="email" placeholder="Email address" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:outline-none mb-4" />
+          <div class="flex justify-end gap-2">
+            <button id="closeForgotModal" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">Cancel</button>
+            <button id="sendResetLink" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-500 text-slate-900 font-semibold">Send Link</button>
+          </div>
+        </div>
       </div>
 
       <!-- Forgot Password Modal -->
@@ -1453,7 +1528,7 @@
 
       <!-- Footer -->
       <footer class="mt-12 py-6 text-center text-sm text-gray-400">
-        <div class="container mx-auto">© 2025 ABC Church Information System. Built by Nyikuli.</div>
+        <div class="container mx-auto">© 2025 ABC Church Information System. Built by Nyikuli Computer Science major KSU.</div>
       </footer>
     </div>
   </div>
@@ -1462,6 +1537,20 @@
     // ----------------------
     // Simple state & helpers
     // ----------------------
+    // Define the API base URL. For local dev, you can set localStorage.setItem('abc_api_base', 'http://localhost:3000') in your browser console.
+    // IMPORTANT: Replace the placeholder with your actual live server URL from Render.
+    const API_BASE = localStorage.getItem('abc_api_base') || 'https://api.your-custom-domain.com';
+
+    // ----------------------
+    // Data Models & Helpers (Moved up for access)
+    // ----------------------
+    const DB_KEYS = { households: 'abc_households', pledges: 'abc_pledges', contributions: 'abc_contributions', ceremonies: 'abc_ceremonies', loose: 'abc_loose', attendance: 'abc_attendance', prayers: 'abc_prayer_requests', events: 'abc_events', loans: 'abc_loans' };
+
+    function read(key){ try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; } }
+    function write(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); }
+    // Seed data if empty
+    if (read(DB_KEYS.households).length === 0) { write(DB_KEYS.households, [{ id: 1, head: 'Margie Robbens', envelope: 'ENV001' }]); write(DB_KEYS.contributions, []); }
+
     const authPage = document.getElementById('authPage');
     const dashboard = document.getElementById('dashboard');
     const extraSignup = document.getElementById('extraSignup');
@@ -1674,7 +1763,6 @@
       authSubmit.disabled = true;
       spinner.classList.remove('hidden');
 
-      const API_BASE = localStorage.getItem('abc_api_base') || 'http://localhost:3000';
       let authenticated = false;
       const creds = btoa(email + ':' + password);
 
@@ -1748,6 +1836,11 @@
         document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
         const target = document.getElementById('page-' + page);
         if (target) target.classList.remove('hidden');
+
+        // Auto-collapse sidebar on mobile when a menu item is clicked
+        if (window.innerWidth < 1024) {
+          document.getElementById('sidebar').classList.remove('translate-x-0');
+        }
       });
     });
 
@@ -1773,24 +1866,77 @@
 
         observer.observe(chartCanvas);
     })();
+
+    let contribChartInstance = null;
+
     function renderContribChart() {
       const ctx = document.getElementById('contribChart').getContext('2d');
-      const months = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sep','Oct','Nov','Dec'];
-      const regular = [12500,13200,14100,13800,15200,14800,16000,15500,16200,17000,16800,17500];
-      const capital = [8200,9100,7800,10200,11500,9800,10500,11200,10700,12000,9900,11500];
-      const total = [20700,22300,21900,24000,26700,24600,26500,26700,26900,29000,26700,29000];
+      
+      // 1. Aggregate Real Data
+      const contributions = read(DB_KEYS.contributions);
+      const currentYear = new Date().getFullYear();
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      
+      const regularData = new Array(12).fill(0);
+      const capitalData = new Array(12).fill(0);
+      const totalData = new Array(12).fill(0);
+      let hasRealData = false;
 
-      new Chart(ctx, {
+      contributions.forEach(c => {
+          const d = new Date(c.date);
+          if (d.getFullYear() === currentYear) {
+              const m = d.getMonth();
+              const r = Number(c.regular)||0;
+              const cap = Number(c.capital)||0;
+              regularData[m] += r;
+              capitalData[m] += cap;
+              totalData[m] += (r + cap);
+              hasRealData = true;
+          }
+      });
+
+      // Fallback to demo data if empty
+      const displayRegular = hasRealData ? regularData : [12500,13200,14100,13800,15200,14800,16000,15500,16200,17000,16800,17500];
+      const displayCapital = hasRealData ? capitalData : [8200,9100,7800,10200,11500,9800,10500,11200,10700,12000,9900,11500];
+      const displayTotal = hasRealData ? totalData : [20700,22300,21900,24000,26700,24600,26500,26700,26900,29000,26700,29000];
+
+      // 2. Calculate Forecast (Simple Moving Average of last 3 months)
+      const lastMonthIndex = hasRealData ? Math.min(new Date().getMonth(), 11) : 11;
+      let sum = 0, count = 0;
+      for (let i = Math.max(0, lastMonthIndex - 2); i <= lastMonthIndex; i++) { sum += displayTotal[i]; count++; }
+      const average = count > 0 ? sum / count : 0;
+
+      const forecastData = new Array(15).fill(null);
+      forecastData[lastMonthIndex] = displayTotal[lastMonthIndex]; // Connect line
+      for (let i = 1; i <= 3; i++) { forecastData[lastMonthIndex + i] = average * (1 + (i * 0.02)); } // +2% growth projection
+
+      const extendedLabels = [...months, 'Jan (Next)', 'Feb (Next)', 'Mar (Next)'];
+
+      if (contribChartInstance) contribChartInstance.destroy();
+
+      contribChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: months,
+          labels: extendedLabels,
           datasets: [
-            { label: 'Regular', data: regular, backgroundColor: 'rgba(139,92,246,0.8)' },
-            { label: 'Capital', data: capital, backgroundColor: 'rgba(236,72,153,0.8)' },
-            { type: 'line', label: 'Total', data: total, borderColor: 'rgba(16,185,129,1)', borderWidth: 3, fill: false }
+            { label: 'Regular', data: displayRegular, backgroundColor: 'rgba(139,92,246,0.8)', order: 2 },
+            { label: 'Capital', data: displayCapital, backgroundColor: 'rgba(236,72,153,0.8)', order: 3 },
+            { type: 'line', label: 'Total', data: displayTotal, borderColor: 'rgba(16,185,129,1)', borderWidth: 3, fill: false, tension: 0.3, order: 1 },
+            { type: 'line', label: 'Forecast', data: forecastData, borderColor: 'rgba(250, 204, 21, 1)', borderWidth: 3, borderDash: [5, 5], fill: false, tension: 0.3, pointStyle: 'circle', pointRadius: 5, order: 0 }
           ]
         },
-        options: { responsive: true, maintainAspectRatio: true }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#cbd5e1' } },
+                tooltip: { callbacks: { label: (c) => (c.dataset.label + ': $' + (c.parsed.y || 0).toLocaleString()) } }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            }
+        }
       });
     }
 
@@ -1838,11 +1984,32 @@
     const openBot = document.getElementById('openBot');
     const botWindow = document.getElementById('botWindow');
     const closeBot = document.getElementById('closeBot');
+    const minimizeBot = document.getElementById('minimizeBot');
+
     if (openBot && botWindow && closeBot) {
         // Clicking the icon toggles the window's visibility
-        openBot.addEventListener('click', () => botWindow.classList.toggle('hidden'));
+        openBot.addEventListener('click', () => {
+            botWindow.classList.toggle('hidden');
+            if (!botWindow.classList.contains('hidden')) {
+                botWindow.style.height = '24rem';
+                if (minimizeBot) minimizeBot.textContent = '_';
+            }
+        });
         // The close button inside the window always hides it
         closeBot.addEventListener('click', () => botWindow.classList.add('hidden'));
+
+        if (minimizeBot) {
+            minimizeBot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (botWindow.style.height === '3.5rem') {
+                    botWindow.style.height = '24rem';
+                    minimizeBot.textContent = '_';
+                } else {
+                    botWindow.style.height = '3.5rem';
+                    minimizeBot.textContent = '□';
+                }
+            });
+        }
     }
 
     // Draggable chatbot
@@ -1875,6 +2042,28 @@
       });
 
       document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Touch events for mobile dragging
+      header.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        const touch = e.touches[0];
+        offsetX = touch.clientX - container.offsetLeft;
+        offsetY = touch.clientY - container.offsetTop;
+        container.style.right = 'auto';
+        container.style.bottom = 'auto';
+      }, { passive: false });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevent scrolling
+        const touch = e.touches[0];
+        container.style.left = `${touch.clientX - offsetX}px`;
+        container.style.top = `${touch.clientY - offsetY}px`;
+      }, { passive: false });
+
+      document.addEventListener('touchend', () => {
         isDragging = false;
       });
     })();
@@ -2286,15 +2475,19 @@ ${recentSummary}`;
     // Misc toggles
     // ----------------------
     const toggleDark = document.getElementById('toggleDark');
-    toggleDark.addEventListener('click', () => {
-      document.body.classList.toggle('bg-white');
-      document.body.classList.toggle('text-black');
-      document.body.classList.toggle('bg-gradient-to-br');
-      // simple manual dark toggle: swap classes
-      if (document.body.style.backgroundColor === 'white') {
-        document.body.style.backgroundColor = '';
-      }
-    });
+    (function setupDarkModeToggle() {
+        const sunIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        const moonIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+        toggleDark.addEventListener('click', () => {
+            document.body.classList.toggle('bg-white');
+            document.body.classList.toggle('text-black');
+            document.body.classList.toggle('bg-gradient-to-br');
+
+            const isLightMode = document.body.classList.contains('bg-white');
+            toggleDark.innerHTML = isLightMode ? sunIcon : moonIcon;
+        });
+    })();
 
     const toggleSidebar = document.getElementById('toggleSidebar');
     toggleSidebar.addEventListener('click', () => {
@@ -2352,13 +2545,7 @@ ${recentSummary}`;
         document.head.appendChild(s);
     })();
 
-    // ----------------------
-    // Local storage data models + UI wiring
-    // ----------------------
-    const DB_KEYS = { households: 'abc_households', pledges: 'abc_pledges', contributions: 'abc_contributions', ceremonies: 'abc_ceremonies', loose: 'abc_loose', attendance: 'abc_attendance', prayers: 'abc_prayer_requests', events: 'abc_events', loans: 'abc_loans' };
-
     // API base and helper (attempt server calls, fallback to localStorage)
-    const API_BASE = localStorage.getItem('abc_api_base') || 'http://localhost:3000';
     function getAuthHeader(){ const c = localStorage.getItem('abc_credentials'); return c ? { Authorization: 'Basic ' + c } : {}; }
     async function apiFetch(path, opts = {}){
       const url = API_BASE + path;
@@ -2372,21 +2559,6 @@ ${recentSummary}`;
         throw e;
       }
     }
-
-    function read(key){ try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; } }
-    function write(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); }
-
-    function seedIfEmpty(){
-      if (read(DB_KEYS.households).length === 0){
-        const h = [ { id: 1, head: 'Margie Robbens', envelope: 'ENV001' }, { id: 2, head: 'Mabel McGonahey', envelope: 'ENV002' } ];
-        write(DB_KEYS.households, h);
-        write(DB_KEYS.pledges, [ { id: 1, householdId: 1, original: 25000, remaining: 25000, start: '2025-01-01' } ]);
-        write(DB_KEYS.contributions, []);
-        write(DB_KEYS.ceremonies, []);
-        write(DB_KEYS.loose, []);
-      }
-    }
-    seedIfEmpty();
 
     function genEnvelope(){
         const hs = read(DB_KEYS.households);
@@ -2758,6 +2930,201 @@ ${recentSummary}`;
           document.getElementById('looseAmount').value=''; document.getElementById('looseDate').value=''; renderLoose(); updateDashboardSummary();
         });
     });
+
+    // ----------------------
+    // M-Pesa Integration Logic
+    // ----------------------
+    (function setupMpesa(){
+      const btn = document.getElementById('btnMpesaPay');
+      const phoneInput = document.getElementById('mpesaPhone');
+      const amountInput = document.getElementById('mpesaAmount');
+      const householdSelect = document.getElementById('mpesaHousehold');
+      const statusEl = document.getElementById('mpesaStatus');
+
+      function populateMpesaHouseholds() {
+          if(!householdSelect) return;
+          const households = read(DB_KEYS.households).sort((a, b) => a.head.localeCompare(b.head));
+          householdSelect.innerHTML = '<option value="">Select Household (Optional)</option>';
+          households.forEach(h => {
+              householdSelect.innerHTML += `<option value="${h.id}">${h.head}</option>`;
+          });
+      }
+      document.addEventListener('DOMContentLoaded', populateMpesaHouseholds);
+      document.getElementById('houseCreate')?.addEventListener('click', populateMpesaHouseholds);
+
+      if(!btn) return;
+
+      async function pollPaymentStatus(requestId, contributionData, originalBtnText) {
+          const { householdId, amount, phone } = contributionData;
+          let attempts = 0;
+          const maxAttempts = 20; // ~1 minute
+
+          const poll = async () => {
+              if (attempts >= maxAttempts) {
+                  statusEl.textContent = 'Polling timed out. Please check SMS.';
+                  statusEl.className = 'text-xs text-center text-orange-400 mt-2';
+                  btn.disabled = false;
+                  btn.innerHTML = originalBtnText;
+                  return;
+              }
+              attempts++;
+
+              try {
+                  const apiBase = localStorage.getItem('abc_api_base') || 'http://localhost:3000';
+                  const res = await fetch(`${apiBase}/api/query-status`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ checkoutRequestId: requestId })
+                  });
+                  const data = await res.json();
+
+                  if (data.ResultCode === "0") {
+                      statusEl.textContent = 'Payment Confirmed! Recording...';
+                      statusEl.className = 'text-xs text-center text-green-400 mt-2 font-bold';
+                      
+                      const household = householdId ? read(DB_KEYS.households).find(h => h.id == householdId) : null;
+                      const payload = { id: Date.now(), householdId: household?.id, envelope: household?.envelope || 'MPESA', regular: amount, capital: 0, date: new Date().toISOString(), method: 'M-Pesa', payerPhone: phone };
+                      const contributions = read(DB_KEYS.contributions); contributions.push(payload); write(DB_KEYS.contributions, contributions);
+                      updateDashboardSummary(); renderRecentContributions();
+                      
+                      phoneInput.value = ''; amountInput.value = ''; householdSelect.value = '';
+                      btn.disabled = false;
+                      btn.innerHTML = originalBtnText;
+                      setTimeout(() => { statusEl.textContent = ''; }, 5000);
+                  } else if (['1032', '1037', '2001'].includes(data.ResultCode)) {
+                      statusEl.textContent = `Failed: ${data.ResultDesc || 'Cancelled'}`;
+                      statusEl.className = 'text-xs text-center text-red-400 mt-2';
+                      btn.disabled = false;
+                      btn.innerHTML = originalBtnText;
+                  } else {
+                      setTimeout(poll, 3000);
+                  }
+              } catch (e) {
+                  console.error(e);
+                  setTimeout(poll, 3000);
+              }
+          };
+          poll();
+      }
+
+      btn.addEventListener('click', async () => {
+          const phone = phoneInput.value.trim();
+          const amount = parseFloat(amountInput.value);
+          const householdId = householdSelect.value;
+          const kenyanPhoneRegex = /^(?:254|\+254|0)?(7|1)\d{8}$/;
+          
+          if (!phone || !kenyanPhoneRegex.test(phone)) {
+              alert('Please enter a valid Kenyan phone number (e.g., 0712345678 or 2547...).');
+              return;
+          }
+          if(!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
+
+          const originalText = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner h-4 w-4 border-2 border-t-transparent rounded-full mr-2"></span> Sending STK...';
+          statusEl.textContent = 'Initiating transaction on your phone...';
+          statusEl.className = 'text-xs text-center text-yellow-400 mt-2';
+
+          try {
+            const response = await fetch(`${API_BASE}/api/stkpush`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, amount })
+            });
+            const data = await response.json();
+
+            if (data.ResponseCode === "0") {
+                statusEl.textContent = `STK Push Sent! Check your phone to enter PIN.`;
+                statusEl.className = 'text-xs text-center text-green-400 mt-2 font-bold';
+                pollPaymentStatus(data.CheckoutRequestID, { householdId, amount, phone }, originalText);
+            } else {
+                throw new Error(data.errorMessage || 'Transaction failed to initiate.');
+            }
+          } catch (error) {
+            console.error(error);
+            // Check for network error
+            let msg = error.message;
+            if (error.message === 'Failed to fetch') {
+                msg = 'Connection failed. Is the server running?';
+                // Prompt user to update API URL if connection fails and we are not on localhost
+                if(!API_BASE.includes('localhost') && confirm('Could not connect to the server. Do you want to update the API URL?')) { 
+                    const newUrl = prompt('Enter new API URL:', API_BASE); 
+                    if(newUrl) { localStorage.setItem('abc_api_base', newUrl); location.reload(); } 
+                }
+            }
+            statusEl.textContent = 'Error: ' + msg;
+            statusEl.className = 'text-xs text-center text-red-400 mt-2';
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+          }
+      });
+    })();
+
+    // ----------------------
+    // Contribution Tabs Logic
+    // ----------------------
+    (function setupContribTabs(){
+        const tabManual = document.getElementById('tabContribManual');
+        const tabMpesa = document.getElementById('tabContribMpesa');
+        const viewManual = document.getElementById('viewContribManual');
+        const viewMpesa = document.getElementById('viewContribMpesa');
+
+        if(tabManual && tabMpesa && viewManual && viewMpesa){
+            tabManual.addEventListener('click', () => {
+                viewManual.classList.remove('hidden'); viewMpesa.classList.add('hidden');
+                tabManual.classList.add('bg-slate-700', 'text-white', 'shadow-lg'); tabManual.classList.remove('text-gray-400', 'hover:bg-slate-800/50');
+                tabMpesa.classList.remove('bg-slate-700', 'text-white', 'shadow-lg'); tabMpesa.classList.add('text-gray-400', 'hover:bg-slate-800/50');
+            });
+            tabMpesa.addEventListener('click', () => {
+                viewManual.classList.add('hidden'); viewMpesa.classList.remove('hidden');
+                tabMpesa.classList.add('bg-slate-700', 'text-white', 'shadow-lg'); tabMpesa.classList.remove('text-gray-400', 'hover:bg-slate-800/50');
+                tabManual.classList.remove('bg-slate-700', 'text-white', 'shadow-lg'); tabManual.classList.add('text-gray-400', 'hover:bg-slate-800/50');
+            });
+        }
+    })();
+
+    // ----------------------
+    // M-Pesa Admin Logic
+    // ----------------------
+    (function setupMpesaAdmin(){
+        const btn = document.querySelector('[data-page="mpesa-admin"]');
+        const refreshBtn = document.getElementById('refreshMpesaAdmin');
+        const tbody = document.getElementById('mpesaAdminTableBody');
+
+        async function loadTransactions() {
+            if(!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Loading transactions...</td></tr>';
+            
+            try {
+                const data = await apiFetch('/api/admin/mpesa-transactions');
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">No transactions found.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(t => {
+                    const statusColor = t.status === 'COMPLETED' ? 'text-green-400' : 
+                                      t.status === 'FAILED' ? 'text-red-400' : 'text-yellow-400';
+                    const dateStr = new Date(t.created_at).toLocaleString();
+                    return `
+                        <tr class="hover:bg-slate-800/50 transition-colors">
+                            <td class="px-4 py-3 whitespace-nowrap">${dateStr}</td>
+                            <td class="px-4 py-3 font-mono">${t.phoneNumber}</td>
+                            <td class="px-4 py-3 font-semibold text-white">${t.amount}</td>
+                            <td class="px-4 py-3 font-mono text-xs">${t.mpesaReceiptNumber || '-'}</td>
+                            <td class="px-4 py-3 font-bold text-xs ${statusColor}">${t.status}</td>
+                            <td class="px-4 py-3 text-xs text-gray-400 max-w-[200px] truncate" title="${t.resultDesc || ''}">${t.resultDesc || '-'}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-red-400">Error loading data: ${e.message}</td></tr>`;
+            }
+        }
+
+        if(btn) btn.addEventListener('click', loadTransactions);
+        if(refreshBtn) refreshBtn.addEventListener('click', loadTransactions);
+    })();
 
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', resetHouseholdForm);
@@ -3760,6 +4127,7 @@ ${recentSummary}`;
         document.getElementById('summary-households').textContent = households;
         document.getElementById('summary-ceremonies').textContent = upcoming;
         document.getElementById('summary-pledges').textContent = pledgeProgress + '%';
+        if (typeof renderEngagementWidget === 'function') renderEngagementWidget();
       } catch(e){/* ignore */}
     }
     updateDashboardSummary();
@@ -3795,14 +4163,14 @@ ${recentSummary}`;
             type: 'Contribution',
             date: new Date(c.date),
             text: `New contribution of <strong>$${((c.regular || 0) + (c.capital || 0)).toFixed(2)}</strong> for ${householdMap.get(c.householdId) || 'a household'}.`,
-            icon: '💰'
+            icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-emerald-400"><path d="M12 1v22M17 5a3 3 0 00-6 0M7 19a4 4 0 018 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         }));
 
         const ceremonies = read(DB_KEYS.ceremonies).map(c => ({
             type: 'Ceremony',
             date: new Date(c.date),
             text: `A <strong>${c.type}</strong> was scheduled for ${c.name || (c.personA + ' & ' + c.personB)}.`,
-            icon: '📅'
+            icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-purple-400"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         }));
 
         const allActivities = [...contributions, ...ceremonies]
@@ -3831,14 +4199,14 @@ ${recentSummary}`;
             type: 'Contribution',
             date: new Date(c.date),
             text: `New contribution of <strong>$${((c.regular || 0) + (c.capital || 0)).toFixed(2)}</strong> for ${householdMap.get(c.householdId) || 'a household'}.`,
-            icon: '💰'
+            icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-emerald-400"><path d="M12 1v22M17 5a3 3 0 00-6 0M7 19a4 4 0 018 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         }));
 
         const ceremonies = read(DB_KEYS.ceremonies).map(c => ({
             type: 'Ceremony',
             date: new Date(c.date),
             text: `A <strong>${c.type}</strong> was scheduled for ${c.name || (c.personA + ' & ' + c.personB)}.`,
-            icon: '📅'
+            icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-purple-400"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         }));
 
         let allActivities = [...contributions, ...ceremonies]
@@ -3877,6 +4245,71 @@ ${recentSummary}`;
                 filter ? highlightText(act.text, filter) : act.text
             }<div class="text-xs text-gray-400">${act.date.toLocaleDateString()}</div></div></div>
         `).join('');
+    }
+
+    // ----------------------
+    // Engagement Score Logic
+    // ----------------------
+    function renderEngagementWidget() {
+        const listEl = document.getElementById('engagementList');
+        if (!listEl) return;
+
+        const households = read(DB_KEYS.households);
+        const contributions = read(DB_KEYS.contributions);
+        const events = read(DB_KEYS.events);
+        const ceremonies = read(DB_KEYS.ceremonies);
+
+        const scores = households.map(h => {
+            let score = 0;
+            
+            // 1. Giving Score (10 pts per contribution record)
+            const householdContribs = contributions.filter(c => c.householdId === h.id);
+            score += householdContribs.length * 10;
+            
+            // 2. Event Participation (5 pts per RSVP)
+            const familyNames = [h.head, ...(h.members || []).map(m => m.name)];
+            const normalizedFamily = familyNames.map(n => n.toLowerCase());
+            
+            events.forEach(e => {
+                if (e.rsvps && e.rsvps.some(r => normalizedFamily.includes(r.toLowerCase()))) {
+                    score += 5;
+                }
+            });
+
+            // 3. Ceremonies (20 pts per involvement)
+            ceremonies.forEach(c => {
+                if (c.householdId === h.id) score += 20;
+            });
+
+            return { head: h.head, score, contribCount: householdContribs.length };
+        });
+
+        const topMembers = scores.sort((a, b) => b.score - a.score).slice(0, 5);
+
+        if (topMembers.length === 0 || topMembers.every(m => m.score === 0)) {
+            listEl.innerHTML = '<div class="text-gray-500 text-sm">No engagement activity recorded yet.</div>';
+            return;
+        }
+
+        listEl.innerHTML = topMembers.map((m, i) => {
+            const rankColor = i === 0 ? 'text-yellow-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-orange-400' : 'text-slate-500';
+            const borderColor = i === 0 ? 'border-yellow-500' : i === 1 ? 'border-gray-400' : i === 2 ? 'border-orange-500' : 'border-slate-700';
+            return `
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/40 border-l-2 ${borderColor}">
+                <div class="flex items-center gap-3">
+                    <div class="font-bold text-sm w-4 text-center ${rankColor}">#${i+1}</div>
+                    <div>
+                        <div class="font-semibold text-sm text-white">${m.head}</div>
+                        <div class="text-[10px] text-gray-500">${m.contribCount} gifts</div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="font-bold text-sm text-purple-400">${m.score}</div>
+                    <div class="text-[10px] text-gray-600">pts</div>
+                </div>
+            </div>
+            `;
+        }).join('');
     }
 
     function renderUpcomingCeremonies() {
@@ -3981,6 +4414,33 @@ ${recentSummary}`;
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        });
+    })();
+
+    // ----------------------
+    // Back to Top Button
+    // ----------------------
+    (function setupBackToTop() {
+        const backToTopBtn = document.getElementById('backToTopBtn');
+        const scrollContainer = document.getElementById('mainContent');
+
+        if (!backToTopBtn || !scrollContainer) return;
+
+        // Show button when scrolling down
+        scrollContainer.addEventListener('scroll', () => {
+            if (scrollContainer.scrollTop > 300) {
+                backToTopBtn.classList.remove('hidden');
+            } else {
+                backToTopBtn.classList.add('hidden');
+            }
+        });
+
+        // Scroll to top on click
+        backToTopBtn.addEventListener('click', () => {
+            scrollContainer.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     })();
 
@@ -4843,5 +5303,3 @@ ${recentSummary}`;
 </html>
 </html>
            
-
-
